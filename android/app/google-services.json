@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "706496795223",
+    "project_id": "bpms-fe70c",
+    "storage_bucket": "bpms-fe70c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706496795223:android:79184927381be4dd9c8912",
+        "android_client_info": {
+          "package_name": "com.bpms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "706496795223-mvmklfr5k4d2jms3tkvntamu35fg69uo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKoPkfdtDeOXUeqOav3hZN49byr0-KCsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "706496795223-mvmklfr5k4d2jms3tkvntamu35fg69uo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
