@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "706496795223-vgllpqdfe4biqpmrsevs8a3ha36cpro1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bpms",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "706496795223-mvmklfr5k4d2jms3tkvntamu35fg69uo.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -2,19 +2,28 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 
 export const SigninWithGoogle = () =>{
-  console.log("ok11")
+    excuteLoginFirebase().then((userCredential)=>{
+      console.log(userCredential)
+    }).catch((err)=>{
+      console.log(err)
+    });
 }
 
-// async function onGoogleButtonPress() {
-//   // Get the users ID token
-//   const { idToken } = await GoogleSignin.signIn();
+async function excuteLoginFirebase() {
 
-//   // Create a Google credential with the token
-//   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  GoogleSignin.configure({
+    webClientId: '706496795223-mvmklfr5k4d2jms3tkvntamu35fg69uo.apps.googleusercontent.com',
+  });
 
-//   // Sign-in the user with the credential
-//   return auth().signInWithCredential(googleCredential);
-// }
+  // Get the users ID token
+  const { idToken } = await GoogleSignin.signIn();
+
+  // Create a Google credential with the token
+  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+  // Sign-in the user with the credential
+  return auth().signInWithCredential(googleCredential);
+}
 
 export const removeSession = async (key) =>{
     try {
