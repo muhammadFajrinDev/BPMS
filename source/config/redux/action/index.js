@@ -1,16 +1,18 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import firestore from '@react-native-firebase/firestore';
+
 import auth from '@react-native-firebase/auth';
 
-export const SigninWithGoogle = () =>{
+export const SigninWithGoogle = () => (dispatch) =>{
   return new Promise ((resolve,reject)=>{
     excuteLoginFirebase().then((userCredential)=>{
-      resolve(true)
       console.log(userCredential)
+      resolve(true)
     }).catch((err)=>{
       reject(true)
-      console.log(err)
-    });
+      console.log("error",err)
   });
+});
 }
 
 async function excuteLoginFirebase() {
