@@ -9,16 +9,16 @@
       "client_info": {
         "mobilesdk_app_id": "1:706496795223:android:79184927381be4dd9c8912",
         "android_client_info": {
-          "package_name": "com.bpms"
+          "package_name": "bpms.indonesia"
         }
       },
       "oauth_client": [
         {
-          "client_id": "706496795223-vgllpqdfe4biqpmrsevs8a3ha36cpro1.apps.googleusercontent.com",
+          "client_id": "706496795223-8cgapjkj938ifi7luouglapj5kkkcf6n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.bpms",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "package_name": "bpms.indonesia",
+            "certificate_hash": "efa603aa95429e9765be88f1b1df7f6f79d5818f"
           }
         },
         {
