@@ -1,15 +1,29 @@
-import { Box, Button, Center, Heading, Icon, InfoOutlineIcon, NativeBaseProvider, Text } from "native-base"
+import { Alert, Box, Button, Center, Heading, Icon, InfoOutlineIcon, NativeBaseProvider, Text } from "native-base"
 import { SigninWithGoogle } from "../../../config/redux/action";
 import Logo from "../../../assets/badminton-logo.svg";
 import { connect } from 'react-redux';
-import React from "react";
+import React, { useEffect } from "react";
 
 
 const Login = (props) => {
   
   const SigninWithGoogleHandle =  async () =>{
-    props.SigninWithGoogle();
+    props.SigninWithGoogle().then((res)=>{
+      props.navigation.push("Union")
+    }).catch((err)=>{
+      Alert(err)
+    })
   }
+
+  useEffect(()=>{
+
+    // Check is Login
+    if(props.isLogin){
+      console.log(props.isLogin)
+      props.navigation.push("Union")
+    }
+
+  },[])   
 
   return (
     <>
@@ -27,9 +41,16 @@ const Login = (props) => {
         </Box>
 
         <Box flex={1} width="100%" alignItems="center">
-          <Button size="30%" width="70%" height="50" onPress={()=>SigninWithGoogleHandle()}>
-            <Heading color="white" size="sm">Sign in with Google</Heading> 
-          </Button>
+          {
+            props.isLoading ? (
+              <Button isLoading isLoadingText="Just a moment" colorScheme="danger" size="30%" width="70%" height="50">
+              </Button>
+            ) : (
+              <Button colorScheme="danger" size="30%" width="70%" height="50" onPress={()=>SigninWithGoogleHandle()}>
+                <Heading color="white" size="sm">Sign in with Google</Heading> 
+              </Button>
+            )
+          }
         </Box>
       </Box>
     </NativeBaseProvider>
@@ -37,9 +58,14 @@ const Login = (props) => {
   );
 };
 
+const reduxState = (state) =>({
+  isLoading : state.isLoading,
+  isLogin : state.isLogin,
+})
+
 const reduxDispatch = (dispatch) => ({
   SigninWithGoogle : () => dispatch(SigninWithGoogle()),
 })
 
-export default connect(null,reduxDispatch)(Login);
+export default connect(reduxState,reduxDispatch)(Login);
 

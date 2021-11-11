@@ -5,14 +5,15 @@ import { connect } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
-import { Login } from '../containers/pages'
+import { Login, UnionMenu } from '../containers/pages'
 
 const Router = (props) =>{
     return (
       <Fragment>
-        <Spinner visible={props.isLoading}/>
+        {/* <Spinner visible={props.isLoading}/> */}
         <Stack.Navigator>        
-              <Stack.Screen name="Login" options={{headerShown: false}} component={Login} /> 
+              <Stack.Screen name="Login" options={{headerShown: false}} component={Login} />
+              <Stack.Screen name="Union" options={{ title: 'Badminton Union', headerBackVisible:false }} component={UnionMenu} />  
         </Stack.Navigator>
       </Fragment>
     ) 

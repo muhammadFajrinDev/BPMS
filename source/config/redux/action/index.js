@@ -1,16 +1,39 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { Alert } from "react-native";
 import firestore from '@react-native-firebase/firestore';
-
 import auth from '@react-native-firebase/auth';
 
+
 export const SigninWithGoogle = () => (dispatch) =>{
+  dispatch({type : "CHANGE_ISLOADING", value: true })
   return new Promise ((resolve,reject)=>{
     excuteLoginFirebase().then((userCredential)=>{
-      console.log(userCredential)
-      resolve(true)
+      firestore()
+        .collection('players')
+        .where('email', '==', userCredential.additionalUserInfo.profile.email)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+            let data_user = documentSnapshot.data();
+
+              if(data_user.role == "admin"){
+                dispatch({type : "CHANGE_ISLOGIN", value: true })
+                dispatch({type : "CHANGE_ISLOADING", value: false })
+                dispatch({type : "CHANGE_UNION", value: data_user.badminton_union })
+                dispatch({type : "CHANGE_USER", value: { name: data_user.name, email: data_user.email } })
+                
+                return resolve(true)
+              }else{
+                dispatch({type : "CHANGE_ISLOADING", value: false })
+                return Alert.alert(
+                  "Infomation",
+                  "Sorry you dont have access this application, please call, Say HI! 085977300189",
+                ) 
+              }
+          });
+      });
     }).catch((err)=>{
-      reject(true)
-      console.log("error",err)
+      resolve(err)
   });
 });
 }
