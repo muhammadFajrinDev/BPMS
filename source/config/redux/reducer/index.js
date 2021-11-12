@@ -2,7 +2,8 @@ const initialState = {
     isLogin : false,
     isLoading : false,
     badminton_union: [],
-    user: {}
+    currentUnion: null,
+    user: {},
 }
 
 const reducer = (state=initialState ,action) =>{
@@ -28,6 +29,12 @@ const reducer = (state=initialState ,action) =>{
       return {
         ...state,
         user : action.value
+      }
+    }
+    if(action.type === 'CHANGE_CURRENT_UNION'){
+      return {
+        ...state,
+        currentUnion : action.value
       }
     }
     return state;

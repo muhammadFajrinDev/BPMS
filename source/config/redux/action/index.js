@@ -38,6 +38,11 @@ export const SigninWithGoogle = () => (dispatch) =>{
 });
 }
 
+export const setUnion = (item) => (dispatch) =>{
+  dispatch({type : "CHANGE_CURRENT_UNION", value: item })
+}
+
+
 async function excuteLoginFirebase() {
 
   GoogleSignin.configure({
