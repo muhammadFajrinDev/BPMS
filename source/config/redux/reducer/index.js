@@ -1,8 +1,10 @@
 const initialState = {
     isLogin : false,
     isLoading : false,
+    isLoadingFull: false,
     badminton_union: [],
     currentUnion: null,
+    detailCurrentUnion:{},
     user: {},
 }
 
@@ -17,6 +19,12 @@ const reducer = (state=initialState ,action) =>{
       return {
         ...state,
         isLoading : action.value
+      }
+    }
+    if(action.type === 'CHANGE_ISLOADINGFULL'){
+      return {
+        ...state,
+        isLoadingFull : action.value
       }
     }
     if(action.type === 'CHANGE_UNION'){
@@ -35,6 +43,12 @@ const reducer = (state=initialState ,action) =>{
       return {
         ...state,
         currentUnion : action.value
+      }
+    }
+    if(action.type === 'CHANGE_CURRENT_UNION_DETAIL'){
+      return {
+        ...state,
+        detailCurrentUnion : action.value
       }
     }
     return state;
