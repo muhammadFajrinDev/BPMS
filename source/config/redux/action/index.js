@@ -64,6 +64,8 @@ export const getPBFull = (key) => (dispatch) => {
             return resolve(data_pb)
           })
         }
+      }).catch(err=>{
+        return Alert.alert("Infomation", err.toString())
       })
   });
 }

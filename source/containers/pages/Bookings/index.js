@@ -10,11 +10,13 @@ const Booking = (props) => {
     const [show, setShow] = useState(false);
 
     // get Data
+    const [datetime, setSatetime] = useState('');
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        console.log(currentDate)
     };
 
     const showMode = (currentMode) => {
@@ -69,6 +71,7 @@ const Booking = (props) => {
                                     >
                                         <Select.Item label="Agape" value="Agape" />
                                         <Select.Item label="PB Gotong Royong" value="PB Gotong Royong" />
+                                        <Select.Item label="Paguyuban Tanah Seratus" value="Paguyuban Tanah Seratus" />
                                     </Select>
                                 </FormControl>
                             </Stack>
@@ -111,7 +114,24 @@ const Booking = (props) => {
                                     </Box>
                                 </Stack>
                             </Flex>
-                            
+                            <Stack mx="1" mt="10">
+                                <Button.Group
+                                    colorScheme="blue"
+                                    mx={{
+                                        base: "auto",
+                                        md: 0,
+                                    }}
+                                    
+                                    
+                                >
+                                     <Button colorScheme="warning">
+                                            <Heading color="white" size="lg">Save</Heading>
+                                    </Button>
+                                    <Button colorScheme="warning">
+                                            <Heading color="white" size="lg">Cancel</Heading>
+                                    </Button>
+                                </Button.Group>
+                            </Stack>
                         </FormControl>
                     </Box>
                 </ScrollView>

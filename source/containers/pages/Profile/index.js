@@ -10,11 +10,12 @@ const Profile = (props) => {
     useEffect(() => {   
             props.getPBFull(props.currentUnion).then(res => {
                 setUnion(res)
+                console.log(res)
             }).catch(err => {
                 alert(err)
             })
     }, [])
-    
+
     return (
         <>
             <NativeBaseProvider>
