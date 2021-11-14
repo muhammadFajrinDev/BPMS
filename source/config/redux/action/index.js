@@ -8,6 +8,7 @@ export const SigninWithGoogle = () => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADING", value: true })
   return new Promise((resolve, reject) => {
     excuteLoginFirebase().then((userCredential) => {
+      console.log(userCredential)
       firestore()
         .collection('players')
         .where('email', '==', userCredential.additionalUserInfo.profile.email)
@@ -42,6 +43,8 @@ export const SigninWithGoogle = () => (dispatch) => {
         });
     }).catch((err) => {
       resolve(false)
+      dispatch({ type: "CHANGE_ISLOADING", value: false })
+      return Alert.alert("Infomation", err.toString())
     });
   });
 }
@@ -68,7 +71,6 @@ export const getPBFull = (key) => (dispatch) => {
 export const setUnion = (item) => (dispatch) => {
   dispatch({ type: "CHANGE_CURRENT_UNION", value: item })
 }
-
 
 async function excuteLoginFirebase() {
 

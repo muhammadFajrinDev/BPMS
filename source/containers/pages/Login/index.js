@@ -9,7 +9,12 @@ const Login = (props) => {
 
   const SigninWithGoogleHandle = async () => {
     props.SigninWithGoogle().then((res) => {
-      props.navigation.push("Union")
+      if(res){
+        props.navigation.push("Union")
+      }else{
+        props.navigation.push("Login")
+      }
+ 
     }).catch((err) => {
       Alert(err)
     })
