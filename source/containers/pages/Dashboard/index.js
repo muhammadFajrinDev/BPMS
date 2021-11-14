@@ -1,4 +1,4 @@
-import { Box, Text, Heading, NativeBaseProvider, HStack, Center, Flex, Image } from "native-base"
+import { Box, Text, Heading, NativeBaseProvider, HStack, Center, Flex, Image, Pressable } from "native-base"
 import { ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from "react";
 import profile_asset from "../../../assets/profile.png";
@@ -21,12 +21,12 @@ const Dashboard = (props) => {
                     <Box h="60px" justifyContent="center" w="full" shadow="2" background="#FFFFFF">
                         <Flex direction="row" justifyContent="space-between">
                             <Heading size="md" ml="7">Dashboard</Heading>
-                            <TouchableOpacity onPress={()=> props.navigation.push("Profile")} 
-                                    style={{
-                                    position:"absolute",
-                                    left:"83%",
-                                    bottom:-10
-                                    }} >
+                            <TouchableOpacity onPress={() => props.navigation.push("Profile")}
+                                style={{
+                                    position: "absolute",
+                                    left: "83%",
+                                    bottom: -10
+                                }} >
                                 <Image
                                     style={{ width: 40, height: 40 }}
                                     source={profile_asset}
@@ -45,12 +45,14 @@ const Dashboard = (props) => {
                     </Box>
                     <Box alignSelf="center" width="85%" mt="6">
                         <HStack alignItems="center" justifyContent="space-between">
-                            <Center h="115" w="48%" bg="#FF5669" rounded="md" shadow={3}>
+                            <Pressable h="115" w="48%" bg="#FF5669" rounded="md" shadow={3} onPress={()=> props.navigation.push("Booking")}>
+                            <Center>
                                 <Heading fontSize="lg" color="#FFFFFF" fontWeight="bold" position="absolute" top="20" right="0" left="4">
                                     Booking
                                 </Heading>
                                 <Booking width={32} height={32} style={{ position: "absolute", right: 20, top: 20 }} />
                             </Center>
+                            </Pressable>
                             <Center h="115" w="48%" bg="#41D5E4" rounded="md" shadow={3}>
                                 <Heading fontSize="lg" color="#FFFFFF" fontWeight="bold" position="absolute" top="20" right="0" left="4">
                                     Players
