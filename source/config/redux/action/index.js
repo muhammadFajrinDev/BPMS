@@ -64,7 +64,36 @@ export const getPBFull = (key) => (dispatch) => {
             return resolve(data_pb)
           })
         }
-      }).catch(err=>{
+      }).catch(err => {
+        resolve(false)
+        return Alert.alert("Infomation", err.toString())
+      })
+  });
+}
+
+export const getLocation = () => (dispatch) => {
+
+  let dataLocation = [];
+
+  return new Promise((resolve, reject) => {
+    firestore()
+      .collection('location')
+      .get()
+      .then(querySnapshot => {
+        if (querySnapshot.size > 0) {
+
+          querySnapshot.forEach(documentSnapshot => {
+            let dto = documentSnapshot.data()
+            dto.id = documentSnapshot.id;
+            dataLocation.push(dto)
+          });
+
+          return resolve(dataLocation)
+        } else {
+          return Alert.alert("Infomation", "Data location not yet.")
+        }
+      }).catch((err) => {
+        resolve(false);
         return Alert.alert("Infomation", err.toString())
       })
   });
