@@ -1,23 +1,55 @@
-import { Box, Button, FormControl, Heading, Input, NativeBaseProvider, Stack, ScrollView, Flex, Select, CheckIcon, WarningOutlineIcon } from "native-base"
+import { Box, Button, FormControl, Heading, Input, NativeBaseProvider, Stack, ScrollView, Flex, Select, CheckIcon, Text } from "native-base"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { getPBFull } from "../../../config/redux/action";
 import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
+import { Alert } from "react-native";
+import moment from 'moment';
 
 const Booking = (props) => {
-    const [date, setDate] = useState(new Date(1598051730000));
+    
+    const condition = new RegExp('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$', 'g'); 
+
+    // Date input Attr
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
     // get Data
-    const [datetime, setSatetime] = useState('');
+    const [dateSave, setDateSave] = useState('YYYY-MM-DD');
 
+    // Validation
+    const [dateValid, setDateValid] = useState(false);
+    const [fromValid, setFromValid] = useState(true);
+    const [toValid, setToValid] = useState(true);
+    
     const onChange = (event, selectedDate) => {
+        
+        let today = new Date();
+        today.setHours(0,0,0,0);
+
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-        console.log(currentDate)
+
+        if(currentDate < today){
+            setDateValid(true)
+            return Alert.alert(
+                "Infomation",
+                "Sorry for date cannot less from date today",
+            )
+        }
+        setDateValid(false)
+        setDateSave(moment(currentDate).format('YYYY-MM-DD'))
     };
+
+    const handleFrom = (value) => {
+        let result = condition.test(value);
+        setFromValid(result)
+    }
+    const handleTo = (value) => {
+        let result = condition.test(value);
+        setToValid(result)
+    }
 
     const showMode = (currentMode) => {
         setShow(true);
@@ -28,13 +60,11 @@ const Booking = (props) => {
         showMode('date');
     };
 
-    const showTimepicker = () => {
-        showMode('time');
-    };
-
     useEffect(() => {
 
     }, [])
+
+    let validation = <Text mt="2" color="red.400">Invalid format time</Text>;
 
     return (
         <>
@@ -54,10 +84,10 @@ const Booking = (props) => {
                                 <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue={props.currentUnion} />
                             </Stack>
                             <Stack mx="4" w="130" mt="5">
-                                <FormControl isRequired isInvalid>
+                                <FormControl isRequired >
                                     <FormControl.Label>Choose Location</FormControl.Label>
                                     <Select
-                                        minWidth="200"
+                                        minWidth="320"
                                         accessibilityLabel="Choose Location"
                                         placeholder="Choose Location"
                                         _selectedItem={{
@@ -68,6 +98,9 @@ const Booking = (props) => {
                                         fontWeight="bold"
                                         fontSize="18"
                                         color="#4D4D4D"
+                                        borderWidth="1"
+                                        borderColor="grey"
+
                                     >
                                         <Select.Item label="Agape" value="Agape" />
                                         <Select.Item label="PB Gotong Royong" value="PB Gotong Royong" />
@@ -78,10 +111,10 @@ const Booking = (props) => {
                             <Flex direction="row" alignSelf="center">
                                 <Stack mx="1" w="118" mt="5">
                                     <FormControl.Label>Date</FormControl.Label>
-                                    <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue="YYYY-MM-DD" />
+                                    <Input type="text" isInvalid={dateValid} isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="md" defaultValue={dateSave} />
                                     <Box mt="3">
                                         <Button colorScheme="blue" onPress={showDatepicker}>
-                                            <Heading color="white" size="md"> Set Date</Heading>
+                                            <Heading color="white" size="sm"> Set Date</Heading>
                                         </Button>
                                     </Box>
                                     {show && (
@@ -95,23 +128,16 @@ const Booking = (props) => {
                                         />
                                     )}
                                 </Stack>
-                                <Stack mx="1" mt="5">
+                                <Stack mx="2" mt="5">
                                     <FormControl.Label>From</FormControl.Label>
-                                    <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue="00:00" />
-                                    <Box mt="3">
-                                        <Button colorScheme="blue" onPress={showTimepicker}>
-                                            <Heading color="white" size="md">Set Time</Heading>
-                                        </Button>
-                                    </Box>
+                                    <Input type="text" isInvalid={!fromValid} onChangeText={text => handleFrom(text)} isDisabled={false} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="md" defaultValue="00:00" />
+                                    {!fromValid && ( validation )}
+
                                 </Stack>
-                                <Stack mx="1" mt="5">
+                                <Stack mx="2" mt="5">
                                     <FormControl.Label>To</FormControl.Label>
-                                    <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue="00:00" />
-                                    <Box mt="3">
-                                        <Button colorScheme="blue" onPress={showTimepicker}>
-                                            <Heading color="white" size="md">Set Time</Heading>
-                                        </Button>
-                                    </Box>
+                                    <Input type="text" isDisabled={false} onChangeText={text => handleTo(text)} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="md" defaultValue="00:00" />
+                                    {!toValid && ( validation )}
                                 </Stack>
                             </Flex>
                             <Stack mx="1" mt="10">
@@ -121,14 +147,9 @@ const Booking = (props) => {
                                         base: "auto",
                                         md: 0,
                                     }}
-                                    
-                                    
                                 >
-                                     <Button colorScheme="warning">
-                                            <Heading color="white" size="lg">Save</Heading>
-                                    </Button>
-                                    <Button colorScheme="warning">
-                                            <Heading color="white" size="lg">Cancel</Heading>
+                                    <Button colorScheme="warning" w="full" h="50px">
+                                        <Heading color="white" size="lg">Save</Heading>
                                     </Button>
                                 </Button.Group>
                             </Stack>
