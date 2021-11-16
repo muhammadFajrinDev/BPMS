@@ -18,8 +18,10 @@ const Booking = (props) => {
     // get Data
     const [dateSave, setDateSave] = useState('YYYY-MM-DD');
     const [location, setLocation] = useState([{ location: '', member_price: '', price_perhour: '' }]);
-    const [from, setFrom] = useState('');
-    const [to, setTrom] = useState('');
+    const [totalHour, setTotalHour] = useState(0);
+    const [priceTotal, setPriceTotal] = useState(0);
+    const [from, setFrom] = useState(0);
+    const [to, setTo] = useState(0);
 
     // Validation
     const [dateValid, setDateValid] = useState(false);
@@ -47,11 +49,13 @@ const Booking = (props) => {
 
     const handleFrom = (value) => {
         let result = condition.test(value);
-        setFromValid(result)
+        setFromValid(result)        
+        setFrom(value)
     }
     const handleTo = (value) => {
         let result = condition.test(value);
         setToValid(result)
+        setTo(value)
     }
 
     const showMode = (currentMode) => {
@@ -69,20 +73,25 @@ const Booking = (props) => {
         }).catch((err) => {
             alert(err)
         })
-    }, [])
+
+        Calculation(from,to)
+    }, [from,to,totalHour,priceTotal])
 
     let Calculation = (from, to) => {
         let f = moment(from, "HH:mm");
         let t = moment(to, "HH:mm");
 
-        let hours = Math.floor(from.diff(a, 'minute') / 60);          
-        let minutes = b.diff(to, 'minute') % 60;
+        let hours = Math.floor( t.diff(f, 'minute')/ 60);          
+        let minutes = t.diff(f, 'minute') % 60;
 
-        console.log(hours+'.'+minutes)
+        let combine = hours + '.' + minutes;
+
+        setTotalHour(combine)
+        setPriceTotal(Math.ceil(((20000 / 60 ) * ((60 * hours) + minutes))))
     }
 
     let validation = <Text mt="2" color="red.400">Invalid format time</Text>;
-
+    
 return (
     <>
         <NativeBaseProvider>
@@ -136,6 +145,7 @@ return (
                                     <Button colorScheme="blue" onPress={showDatepicker}>
                                         <Heading color="white" size="sm"> Set Date</Heading>
                                     </Button>
+                                    
                                 </Box>
                                 {show && (
                                     <DateTimePicker
@@ -161,11 +171,19 @@ return (
                             </Stack>
                             <Stack mx="1" mt="5">
                                 <FormControl.Label>Total Hour</FormControl.Label>
-                                <Input type="text" isDisabled={true} onChangeText={text => handleTo(text)} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="md" defaultValue="0" />
+                                <Input type="text" isDisabled={true} background="grey" color="#FFFFFF" fontWeight="bold" variant="filled" size="md" defaultValue={totalHour} />
                                 {!toValid && (validation)}
                             </Stack>
                         </Flex>
-                        <Stack mx="1" mt="10">
+                        <Stack mx="4" mt="5" w="50%">
+                            <FormControl.Label>Price Calculation</FormControl.Label>
+                            <Input type="number" textAlign="center" isDisabled={true} background="grey" color="#FFFFFF" fontWeight="bold" variant="filled" size="xl" defaultValue={priceTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} />
+                        </Stack>
+                        <Stack mx="4" mt="5" >
+                            <FormControl.Label>Requester</FormControl.Label>
+                            <Input type="number" pl='4' isDisabled={false} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" placeholder="username" defaultValue="" />
+                        </Stack>
+                        <Stack mx="1" mt="10" mb="8">
                             <Button.Group
                                 colorScheme="blue"
                                 mx={{
