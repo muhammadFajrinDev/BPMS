@@ -48,12 +48,13 @@ const Booking = (props) => {
                 "Sorry for date cannot less from date today",
             )
         }
-        setDateValid(false)
+        setDateValid(true)
         setDateSave(moment(currentDate).format('YYYY-MM-DD'))
     };
 
     const handleFrom = (value) => {
         let result = condition.test(value);
+        console.log("tes", result)
         setFromValid(result)
         setFrom(value)
     }
@@ -74,33 +75,65 @@ const Booking = (props) => {
 
     const saveDataBooking = () => {
 
+        let validArr = []
+
         if (dateSave == 'YYYY-MM-DD') {
             setDateValid(false)
+            validArr.push(false)
         }
 
-        if (from == 0) {
+        if (from == 0 || !fromValid) {
             setFromValid(false)
+            validArr.push(false)
         }
 
-        if (to == 0) {
+        if (to == 0 || !toValid) {
             setToValid(false)
+            validArr.push(false)
         }
 
         if (HandleReq == 0) {
             reqSetValid(false)
+            validArr.push(false)
         }
 
         if (locationSelect == '') {
             setReqLocValid(false)
+            validArr.push(false)
         }
 
-        if (to > from) {
+        if (from > to) {
             setFromValid(false)
             setToValid(false)
+            validArr.push(false)
             Alert.alert(
                 "Infomation",
                 "Sorry for start time cannot more than end time.",
             )
+        }
+
+        if (FormOK(validArr)) {
+            Alert.alert(
+                "Confirmation",
+                "Are you sure ?",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+            );
+        }
+    }
+
+    const FormOK = (validArr) => {
+        console.log(validArr)
+        if (validArr.includes(false)) {
+            return false;
+        } else {
+            return true;
         }
     }
 
