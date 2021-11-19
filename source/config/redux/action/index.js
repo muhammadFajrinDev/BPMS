@@ -49,11 +49,13 @@ export const SigninWithGoogle = () => (dispatch) => {
   });
 }
 
+
 export const getPBFull = (key) => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADINGFULL", value: true })
   return new Promise((resolve, reject) => {
     firestore()
-      .collection('badminton_union')
+    .collection('badminton_union')
+    // Suggestion using id Union
       .where('name', '==', key)
       .get()
       .then(querySnapshot => {
