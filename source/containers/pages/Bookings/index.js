@@ -8,6 +8,7 @@ import moment from 'moment';
 
 const Booking = (props) => {
 
+    console.log(props)
     const condition = new RegExp('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$', 'g');
 
     // Date input Attr
@@ -129,7 +130,6 @@ const Booking = (props) => {
     }
 
     const FormOK = (validArr) => {
-        console.log(validArr)
         if (validArr.includes(false)) {
             return false;
         } else {
@@ -178,7 +178,7 @@ const Booking = (props) => {
                         <FormControl isRequired>
                             <Stack mx="4">
                                 <FormControl.Label>Badminton Union</FormControl.Label>
-                                <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue={props.currentUnion} />
+                                <Input type="text" isDisabled={true} background="#FFFFFF" color="#4D4D4D" fontWeight="bold" variant="filled" size="xl" defaultValue={props.currentUnion.name} />
                             </Stack>
                             <Stack mx="4" w="130" mt="5">
                                 <FormControl isRequired >

@@ -7,8 +7,11 @@ import { Alert } from "react-native";
 export const SigninWithGoogle = () => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADING", value: true })
   return new Promise((resolve, reject) => {
+
+    let dataUnion = []
+    let data_user = null;
+
     excuteLoginFirebase().then((userCredential) => {
-      console.log(userCredential)
       firestore()
         .collection('players')
         .where('email', '==', userCredential.additionalUserInfo.profile.email)
@@ -16,15 +19,26 @@ export const SigninWithGoogle = () => (dispatch) => {
         .then(querySnapshot => {
           if (querySnapshot.size > 0) {
             querySnapshot.forEach(documentSnapshot => {
-              let data_user = documentSnapshot.data();
+              data_user = documentSnapshot.data();
               if (data_user.role == "admin") {
 
-                dispatch({ type: "CHANGE_ISLOGIN", value: true })
-                dispatch({ type: "CHANGE_ISLOADING", value: false })
-                dispatch({ type: "CHANGE_UNION", value: data_user.badminton_union })
-                dispatch({ type: "CHANGE_USER", value: { name: data_user.name, email: data_user.email } })
+                data_user.badminton_union.forEach(itemUnion => {
 
-                return resolve(true)
+                  itemUnion.get().then((res) => {
+                    let dto = res.data()
+                    dto.id = itemUnion.id;
+
+                    dataUnion.push(dto)
+
+                  }).catch((err) => {
+                    return Alert.alert(
+                      "Infomation",
+                      err,
+                    )
+                  })
+
+                })
+
               } else {
                 dispatch({ type: "CHANGE_ISLOADING", value: false })
                 return Alert.alert(
@@ -33,6 +47,15 @@ export const SigninWithGoogle = () => (dispatch) => {
                 )
               }
             });
+
+            setTimeout(() => {
+              dispatch({ type: "CHANGE_ISLOGIN", value: true })
+              dispatch({ type: "CHANGE_ISLOADING", value: false })
+              dispatch({ type: "CHANGE_UNION", value: dataUnion })
+              dispatch({ type: "CHANGE_USER", value: { name: data_user.name, email: data_user.email } })
+              return resolve(true)
+            }, 5000)
+
           } else {
             dispatch({ type: "CHANGE_ISLOADING", value: false })
             return Alert.alert(
@@ -54,22 +77,17 @@ export const getPBFull = (key) => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADINGFULL", value: true })
   return new Promise((resolve, reject) => {
     firestore()
-    .collection('badminton_union')
-    // Suggestion using id Union
-      .where('name', '==', key)
-      .get()
-      .then(querySnapshot => {
-        if (querySnapshot.size > 0) {
-          querySnapshot.forEach(documentSnapshot => {
-            let data_pb = documentSnapshot.data();
-            dispatch({ type: "CHANGE_ISLOADINGFULL", value: false })
-            return resolve(data_pb)
-          })
+      .collection('badminton_union')
+      .doc(key.id)
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          let data_pb = documentSnapshot.data();
+          dispatch({ type: "CHANGE_ISLOADINGFULL", value: false })
+          return resolve(data_pb)
+        } else {
+          return reject(documentSnapshot.exists)
         }
-      }).catch(err => {
-        resolve(false)
-        return Alert.alert("Infomation", err.toString())
-      })
+      });
   });
 }
 

@@ -4,7 +4,6 @@ const initialState = {
     isLoadingFull: false,
     badminton_union: [],
     currentUnion: null,
-    detailCurrentUnion:{},
     user: {},
 }
 
@@ -43,12 +42,6 @@ const reducer = (state=initialState ,action) =>{
       return {
         ...state,
         currentUnion : action.value
-      }
-    }
-    if(action.type === 'CHANGE_CURRENT_UNION_DETAIL'){
-      return {
-        ...state,
-        detailCurrentUnion : action.value
       }
     }
     return state;

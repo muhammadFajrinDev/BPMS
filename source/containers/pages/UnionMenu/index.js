@@ -7,7 +7,6 @@ const UnionMenu = (props) => {
 
   const [union, setUnion] = useState([]);
 
-
   useEffect(() => {
     setUnion(props.badminton_union)
   }, [])
@@ -24,9 +23,9 @@ const UnionMenu = (props) => {
           <Box alignItems="center">
             {
               union.map((item, i) => (
-                <Button key={i} value={item} onPress={() => getUnion(item)} colorScheme="info" size="md" w="80%" h="20" mt="6" >
-                  <Heading color="white" size="lg">            
-                    {item}
+                <Button key={i} value={item.id} onPress={() => getUnion(item)} colorScheme="info" size="md" w="80%" h="20" mt="6" >
+                  <Heading color="white" size="lg">
+                    {item.name}
                   </Heading>
                 </Button>
               )

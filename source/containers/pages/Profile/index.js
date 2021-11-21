@@ -6,14 +6,12 @@ import { connect } from 'react-redux';
 const Profile = (props) => {
 
     const [union, setUnion] = useState({});
-
-    useEffect(() => {   
-            props.getPBFull(props.currentUnion).then(res => {
-                setUnion(res)
-                console.log(res)
-            }).catch(err => {
-                alert(err)
-            })
+    useEffect(() => {
+        props.getPBFull(props.currentUnion).then(res => {
+            setUnion(res)
+        }).catch(err => {
+            alert(err)
+        })
     }, [])
 
     return (
@@ -21,7 +19,7 @@ const Profile = (props) => {
             <NativeBaseProvider>
                 <Box flex={1} background="#DBE4F3">
                     <Heading textAlign="center" mt="10">
-                        {props.currentUnion} Organizational Structure
+                        {union.name} Organizational Structure
                     </Heading>
                     <Stack mx="6" mt="7">
                         <FormControl.Label>Leader</FormControl.Label>

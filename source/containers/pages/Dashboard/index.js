@@ -1,8 +1,8 @@
 import { Box, Text, Heading, NativeBaseProvider, HStack, Center, Flex, Image, Pressable } from "native-base"
+import { getPBFull, setUnion } from "../../../config/redux/action";
 import { ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from "react";
 import profile_asset from "../../../assets/profile.png";
-import { setUnion } from "../../../config/redux/action";
 import Shuttlecock from "../../../assets/shuttlecock.svg";
 import Finance from "../../../assets/finance.svg";
 import Booking from "../../../assets/booking.svg";
@@ -13,6 +13,17 @@ import Arrow from "../../../assets/arrow.svg";
 import { connect } from 'react-redux';
 
 const Dashboard = (props) => {
+
+    const [union, setUnion] = useState({});
+
+    useEffect(() => {
+        props.getPBFull(props.currentUnion).then(res => {
+            console.log(res)
+            setUnion(res)
+        }).catch(err => {
+            alert(err)
+        })
+    }, [])
 
     return (
         <>
@@ -41,7 +52,7 @@ const Dashboard = (props) => {
                         </Heading>
                     </Box>
                     <Box alignSelf="center" w="89%" mt="2">
-                        <Text color="#4D4D4D" fontWeight="bold" fontSize="27"> {props.currentUnion} </Text>
+                        <Text color="#4D4D4D" fontWeight="bold" fontSize="27"> {union.name} </Text>
                     </Box>
                     <Box alignSelf="center" width="85%" mt="6">
                         <HStack alignItems="center" justifyContent="space-between">
@@ -150,9 +161,8 @@ const reduxState = (state) => ({
 })
 
 const reduxDispatch = (dispatch) => ({
-    //   setUnion: (item) => dispatch(setUnion(item)),
+    getPBFull: (key) => dispatch(getPBFull(key)),
 })
-
 
 export default connect(reduxState, reduxDispatch)(Dashboard);
 
