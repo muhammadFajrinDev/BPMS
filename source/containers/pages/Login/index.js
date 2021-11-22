@@ -8,22 +8,23 @@ import { connect } from 'react-redux';
 const Login = (props) => {
 
   const SigninWithGoogleHandle = async () => {
-    props.SigninWithGoogle().then((res) => {
-      if(res){
+    try{
+      let response = await props.SigninWithGoogle();
+      console.log("ok",response)
+      if (response) {
         props.navigation.push("Union")
-      }else{
+      } else {
         props.navigation.push("Login")
       }
- 
-    }).catch((err) => {
+    }
+    catch(err){
       Alert(err)
-    })
+    }
   }
 
   useEffect(() => {
     // Check is Login
     if (props.isLogin) {
-      console.log(props.isLogin)
       props.navigation.push("Union")
     }
   }, [])

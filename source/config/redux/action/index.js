@@ -4,74 +4,81 @@ import auth from '@react-native-firebase/auth';
 import { Alert } from "react-native";
 
 
-export const SigninWithGoogle = () => (dispatch) => {
-  dispatch({ type: "CHANGE_ISLOADING", value: true })
+const getDataPlayer = (email) => {
+
   return new Promise((resolve, reject) => {
-
-    let dataUnion = []
-    let data_user = null;
-
-    excuteLoginFirebase().then((userCredential) => {
-      firestore()
-        .collection('players')
-        .where('email', '==', userCredential.additionalUserInfo.profile.email)
-        .get()
-        .then(querySnapshot => {
-          if (querySnapshot.size > 0) {
-            querySnapshot.forEach(documentSnapshot => {
-              data_user = documentSnapshot.data();
-              if (data_user.role == "admin") {
-
-                data_user.badminton_union.forEach(itemUnion => {
-
-                  itemUnion.get().then((res) => {
-                    let dto = res.data()
-                    dto.id = itemUnion.id;
-
-                    dataUnion.push(dto)
-
-                  }).catch((err) => {
-                    return Alert.alert(
-                      "Infomation",
-                      err,
-                    )
-                  })
-
-                })
-
-              } else {
-                dispatch({ type: "CHANGE_ISLOADING", value: false })
-                return Alert.alert(
-                  "Infomation",
-                  "Sorry you dont have access this application, please call, Say Assalamu'alaikum 085977300189",
-                )
-              }
-            });
-
-            setTimeout(() => {
-              dispatch({ type: "CHANGE_ISLOGIN", value: true })
-              dispatch({ type: "CHANGE_ISLOADING", value: false })
-              dispatch({ type: "CHANGE_UNION", value: dataUnion })
-              dispatch({ type: "CHANGE_USER", value: { name: data_user.name, email: data_user.email } })
-              return resolve(true)
-            }, 5000)
-
-          } else {
-            dispatch({ type: "CHANGE_ISLOADING", value: false })
-            return Alert.alert(
-              "Infomation",
-              "Sorry your account not already register on application please call Developers, Say Assalamu'alaikum ! 085977300189",
-            )
-          }
-        });
-    }).catch((err) => {
-      resolve(false)
-      dispatch({ type: "CHANGE_ISLOADING", value: false })
-      return Alert.alert("Infomation", err.toString())
-    });
+    firestore()
+      .collection('players')
+      .where('email', '==', email)
+      .get()
+      .then(querySnapshot => {
+        if (querySnapshot.size > 0) {
+          querySnapshot.forEach(documentSnapshot => {
+            let data_user = documentSnapshot.data();
+            if (data_user.role == "admin") {
+              resolve(data_user)
+            } else {
+              reject(new Error("Sorry you dont have access this application, please call, Say Assalamu'alaikum 085977300189"));
+            }
+          });
+        } else {
+          reject(new Error("Sorry your account not already register on application please call Developers, Say Assalamu'alaikum ! 085977300189"));
+        }
+      })
+      .catch(err => {
+        return Alert.alert(
+          "Infomation",
+          err.toString(),
+        )
+      })
   });
 }
 
+const getDataUnion = async (data) => {
+  return new Promise((resolve, reject) => {
+    let dataUnion = []
+    data.badminton_union.forEach(itemUnion => {
+      itemUnion.get().then((res) => {
+        let dto = res.data()
+        dto.id = itemUnion.id;
+        dataUnion.push(dto)
+      }).catch((err) => {
+        reject(new Error(err));
+      })
+    })
+    resolve(dataUnion)
+  })
+}
+
+export const SigninWithGoogle = () => (dispatch) => {
+
+  dispatch({ type: "CHANGE_ISLOADING", value: true })
+
+  return new Promise((resolve) => {
+
+    excuteLoginFirebase()
+      .then((userCredential) => {
+        return getDataPlayer(userCredential.additionalUserInfo.profile.email)
+      })
+      .then(dataUser => {
+        dispatch({ type: "CHANGE_USER", value: { name: dataUser.name, email: dataUser.email } })
+        return getDataUnion(dataUser)
+      })
+      .then(dataUnion => {
+        dispatch({ type: "CHANGE_ISLOGIN", value: true })
+        dispatch({ type: "CHANGE_ISLOADING", value: false })
+        dispatch({ type: "CHANGE_UNION", value: dataUnion })
+        console.log("then",dataUnion)
+        resolve(dataUnion)
+      })
+      .catch((err) => {
+        dispatch({ type: "CHANGE_ISLOADING", value: false })
+        return Alert.alert("Infomation", err.toString())
+      });
+
+  });
+
+}
 
 export const getPBFull = (key) => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADINGFULL", value: true })
@@ -113,8 +120,8 @@ export const getLocation = () => (dispatch) => {
           return Alert.alert("Infomation", "Data location not yet.")
         }
       }).catch((err) => {
-        resolve(false);
-        return Alert.alert("Infomation", err.toString())
+        reject(false);
+        return Alert.alert("Infomation", err)
       })
   });
 }

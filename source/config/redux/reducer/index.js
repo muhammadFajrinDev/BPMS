@@ -2,7 +2,7 @@ const initialState = {
     isLogin : false,
     isLoading : false,
     isLoadingFull: false,
-    badminton_union: [],
+    badminton_union: null,
     currentUnion: null,
     user: {},
 }
