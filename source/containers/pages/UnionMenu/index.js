@@ -8,7 +8,6 @@ const UnionMenu = (props) => {
   const [union, setUnion] = useState([]);
 
   useEffect(() => {
-
     setUnion(props.badminton_union)
   }, [])
 

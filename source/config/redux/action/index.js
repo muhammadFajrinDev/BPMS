@@ -2,10 +2,10 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { Alert } from "react-native";
+import { Profile } from '../../../containers/pages';
 
 
 const getDataPlayer = (email) => {
-
   return new Promise((resolve, reject) => {
     firestore()
       .collection('players')
@@ -35,19 +35,20 @@ const getDataPlayer = (email) => {
 }
 
 const getDataUnion = async (data) => {
-  return new Promise((resolve, reject) => {
-    let dataUnion = []
-    data.badminton_union.forEach(itemUnion => {
-      itemUnion.get().then((res) => {
-        let dto = res.data()
-        dto.id = itemUnion.id;
-        dataUnion.push(dto)
-      }).catch((err) => {
-        reject(new Error(err));
-      })
-    })
-    resolve(dataUnion)
+  let dataUnion = []
+  data.badminton_union.forEach(itemUnion => {
+    let data = itemUnion.get();
+    dataUnion.push(data)
   })
+  return Promise.all(dataUnion);
+}
+
+const getItemUnion = (union) => {
+  let data = []
+  union.forEach(item => {
+    data.push(item.data())
+  })
+  return data;
 }
 
 export const SigninWithGoogle = () => (dispatch) => {
@@ -65,11 +66,12 @@ export const SigninWithGoogle = () => (dispatch) => {
         return getDataUnion(dataUser)
       })
       .then(dataUnion => {
+        return getItemUnion(dataUnion)
+      }).then(itemUnion => {
         dispatch({ type: "CHANGE_ISLOGIN", value: true })
         dispatch({ type: "CHANGE_ISLOADING", value: false })
-        dispatch({ type: "CHANGE_UNION", value: dataUnion })
-        console.log("then",dataUnion)
-        resolve(dataUnion)
+        dispatch({ type: "CHANGE_UNION", value: itemUnion })
+        resolve(itemUnion)
       })
       .catch((err) => {
         dispatch({ type: "CHANGE_ISLOADING", value: false })

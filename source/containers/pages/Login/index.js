@@ -10,7 +10,6 @@ const Login = (props) => {
   const SigninWithGoogleHandle = async () => {
     try{
       let response = await props.SigninWithGoogle();
-      console.log("ok",response)
       if (response) {
         props.navigation.push("Union")
       } else {
