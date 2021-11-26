@@ -18,7 +18,6 @@ const Dashboard = (props) => {
 
     useEffect(() => {
         props.getPBFull(props.currentUnion).then(res => {
-            console.log(res)
             setUnion(res)
         }).catch(err => {
             alert(err)

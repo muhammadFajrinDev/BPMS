@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, Heading, Input, NativeBaseProvider, Stack, ScrollView, Flex, Select, CheckIcon, Text } from "native-base"
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getLocation } from "../../../config/redux/action";
+import { getLocation, saveBooking } from "../../../config/redux/action";
 import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { Alert } from "react-native";
@@ -8,7 +8,6 @@ import moment from 'moment';
 
 const Booking = (props) => {
 
-    console.log(props)
     const condition = new RegExp('^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$', 'g');
 
     // Date input Attr
@@ -33,6 +32,32 @@ const Booking = (props) => {
     const [reqValid, reqSetValid] = useState(true);
     const [toValid, setToValid] = useState(true);
 
+    const saveAction = async () =>{
+        try{
+            let response = await props.saveBooking({
+                    badminton_union: props.currentUnion.name,
+                    booking_date: dateSave,
+                    datetime: new Date().toUTCString(),
+                    location: locationSelect,
+                    requester: HandleReq,
+                    time_from: from,
+                    time_to: to,
+            })
+
+            if(response){
+                return Alert.alert(
+                    "Infomation",
+                    "Success",
+                )
+            }
+        }catch(err){
+            return Alert.alert(
+                "Save Failed",
+                err.toString(),
+            )
+        }
+    }
+
     const onChange = (event, selectedDate) => {
 
         let today = new Date();
@@ -55,7 +80,6 @@ const Booking = (props) => {
 
     const handleFrom = (value) => {
         let result = condition.test(value);
-        console.log("tes", result)
         setFromValid(result)
         setFrom(value)
     }
@@ -123,7 +147,9 @@ const Booking = (props) => {
                         onPress: () => console.log("Cancel Pressed"),
                         style: "cancel"
                     },
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                    {
+                        text: "OK", onPress: () => saveAction()
+                    }
                 ]
             );
         }
@@ -140,8 +166,15 @@ const Booking = (props) => {
     useEffect(() => {
 
         const getLocation = async () => {
-            let Locs = await props.getLocation();
-            setLocation(Locs)
+            try {
+                let Locs = await props.getLocation();
+                setLocation(Locs)
+            } catch (err) {
+                Alert.alert(
+                    "Infomation",
+                    err.toString(),
+                )
+            }
         }
 
         // Calculation(from,to)
@@ -284,6 +317,7 @@ const reduxState = (state) => ({
 
 const reduxDispatch = (dispatch) => ({
     getLocation: () => dispatch(getLocation()),
+    saveBooking: (data) => dispatch(saveBooking(data))
 })
 
 export default connect(reduxState, reduxDispatch)(Booking);

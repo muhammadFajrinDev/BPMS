@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import { Alert } from "react-native";
 import { Profile } from '../../../containers/pages';
 
+// Authentication
 
 const getDataPlayer = (email) => {
   return new Promise((resolve, reject) => {
@@ -40,13 +41,16 @@ const getDataUnion = async (data) => {
     let data = itemUnion.get();
     dataUnion.push(data)
   })
-  return Promise.all(dataUnion);
+  return await Promise.all(dataUnion);
 }
 
 const getItemUnion = (union) => {
+
   let data = []
   union.forEach(item => {
-    data.push(item.data())
+    let dto = item.data();
+    dto.id = item.id;
+    data.push(dto)
   })
   return data;
 }
@@ -82,6 +86,9 @@ export const SigninWithGoogle = () => (dispatch) => {
 
 }
 
+// end authentication
+
+
 export const getPBFull = (key) => (dispatch) => {
   dispatch({ type: "CHANGE_ISLOADINGFULL", value: true })
   return new Promise((resolve, reject) => {
@@ -100,7 +107,7 @@ export const getPBFull = (key) => (dispatch) => {
   });
 }
 
-export const getLocation = () => (dispatch) => {
+export const getLocation = () => () => {
 
   let dataLocation = [];
 
@@ -119,13 +126,29 @@ export const getLocation = () => (dispatch) => {
 
           return resolve(dataLocation)
         } else {
-          return Alert.alert("Infomation", "Data location not yet.")
+          return reject(new Error("Data location not yet."));
         }
       }).catch((err) => {
-        reject(false);
-        return Alert.alert("Infomation", err)
+        return reject(new Error(err));
       })
   });
+}
+
+export const checkBookingDateExisting = () => {
+
+}
+
+export const saveBooking = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    firestore()
+    .collection('bookings')
+    .add(data)
+    .then(() => {
+      resolve(true)
+    }).catch((err)=>{
+      reject(new Error(err))
+    });
+  })
 }
 
 export const setUnion = (item) => (dispatch) => {
