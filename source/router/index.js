@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
-import { Dashboard, Login, UnionMenu, Profile, Bookings } from '../containers/pages'
+import { Dashboard, Login, UnionMenu, Profile, Bookings, BookingList } from '../containers/pages'
 
 const Router = (props) => {
   
@@ -40,6 +40,7 @@ const Router = (props) => {
 
         <Stack.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
         <Stack.Screen name="Booking" options={{ title: 'Booking' }} component={Bookings} />
+        <Stack.Screen name="BookingList"  options={{ title: 'Booking', title:"Booking List" }} component={BookingList} />
 
       </Stack.Navigator>
     </Fragment>

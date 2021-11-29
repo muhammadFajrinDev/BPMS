@@ -55,7 +55,7 @@ const Dashboard = (props) => {
                     </Box>
                     <Box alignSelf="center" width="85%" mt="6">
                         <HStack alignItems="center" justifyContent="space-between">
-                            <Pressable h="115" w="48%" bg="#FF5669" rounded="md" shadow={3} onPress={()=> props.navigation.push("Booking")}>
+                            <Pressable h="115" w="48%" bg="#FF5669" rounded="md" shadow={3} onPress={()=> props.navigation.push("BookingList")}>
                             <Center>
                                 <Heading fontSize="lg" color="#FFFFFF" fontWeight="bold" position="absolute" top="20" right="0" left="4">
                                     Booking
